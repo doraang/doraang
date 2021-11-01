@@ -1,19 +1,17 @@
-package me.chacham
+package me.chacham.dorrang
 
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.server.Directives.{handleWebSocketMessages, path}
 import akka.http.scaladsl.server.Route
+import me.chacham.dorrang.api.RootRoute
 
-import scala.util.Failure
-import scala.util.Success
+import scala.util.{Failure, Success}
 
 object DoraangApp {
   private def startHttpServer(
       routes: Route
   )(implicit system: ActorSystem[_]): Unit = {
-    // Akka HTTP still needs a classic ActorSystem to start
     import system.executionContext
 
     val futureBinding = Http().newServerAt("localhost", 8080).bind(routes)
@@ -31,14 +29,9 @@ object DoraangApp {
     }
   }
 
-  val routes: Route =
-    path("ws") {
-      handleWebSocketMessages(WebSocketHandler.echo)
-    }
-
   def main(args: Array[String]): Unit = {
     val rootBehavior = Behaviors.setup[Nothing] { context =>
-      startHttpServer(routes)(context.system)
+      startHttpServer(RootRoute())(context.system)
       Behaviors.empty
     }
     val system = ActorSystem[Nothing](rootBehavior, "HelloAkkaHttpServer")
