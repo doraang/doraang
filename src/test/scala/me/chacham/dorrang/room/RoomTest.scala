@@ -12,7 +12,8 @@ class RoomTest extends AnyFlatSpec with BeforeAndAfterAll with should.Matchers {
   val testKit: ActorTestKit = ActorTestKit()
 
   "A Room" should "broadcast join message to sessions if receive join message" in {
-    val room = testKit.spawn(Room())
+    val roomService = testKit.spawn(RoomService())
+    val room = testKit.spawn(Room("testRoomId", roomService))
     val session1 = testKit.createTestProbe[SessionMessage]()
     val session2 = testKit.createTestProbe[SessionMessage]()
     val session3 = testKit.createTestProbe[SessionMessage]()
