@@ -5,15 +5,15 @@ import akka.actor.typed.{ActorRef, Behavior}
 import me.chacham.dorrang.room.CreateRoom
 import me.chacham.dorrang.room.RoomService.RoomService
 
-sealed trait ExternalSvcMessage
-final case class CreateRoomRequest(roomId: String) extends ExternalSvcMessage
-final case class RoomCreated(roomId: String) extends ExternalSvcMessage
-final case class RoomTerminated(roomId: String) extends ExternalSvcMessage
+sealed trait ManagementGatewayMessage
+final case class CreateRoomRequest(roomId: String) extends ManagementGatewayMessage
+final case class RoomCreated(roomId: String) extends ManagementGatewayMessage
+final case class RoomTerminated(roomId: String) extends ManagementGatewayMessage
 
-object ExternalService {
-  type ExternalService = ActorRef[ExternalSvcMessage]
+object ManagementGateway {
+  type ManagementGateway = ActorRef[ManagementGatewayMessage]
 
-  def apply(roomService: RoomService): Behavior[ExternalSvcMessage] = {
+  def apply(roomService: RoomService): Behavior[ManagementGatewayMessage] = {
     Behaviors.receive {
       case (context, CreateRoomRequest(roomId)) =>
         roomService ! CreateRoom(context.self, Some(roomId))

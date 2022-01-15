@@ -2,7 +2,7 @@ package me.chacham.dorrang.room
 
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.{ActorRef, Behavior}
-import me.chacham.dorrang.external.{ExternalSvcMessage, RoomCreated, RoomTerminated}
+import me.chacham.dorrang.external.{ManagementGatewayMessage, RoomCreated, RoomTerminated}
 import me.chacham.dorrang.messagebroker.{BrokerMessage, UpstreamBrokerMessage}
 import me.chacham.dorrang.session.InitSession
 import me.chacham.dorrang.session.Session.Session
@@ -11,8 +11,9 @@ import java.util.UUID
 
 sealed trait RoomSvcMessage
 final case class InitRoomService(messageBroker: ActorRef[BrokerMessage]) extends RoomSvcMessage
-final case class CreateRoom(replyTo: ActorRef[ExternalSvcMessage], roomId: Option[String] = None) extends RoomSvcMessage
-final case class TerminateRoom(replyTo: ActorRef[ExternalSvcMessage], roomId: String) extends RoomSvcMessage
+final case class CreateRoom(replyTo: ActorRef[ManagementGatewayMessage], roomId: Option[String] = None)
+    extends RoomSvcMessage
+final case class TerminateRoom(replyTo: ActorRef[ManagementGatewayMessage], roomId: String) extends RoomSvcMessage
 final case class UpstreamRoomSvcMessage(roomId: String, roomMessage: RoomMessage) extends RoomSvcMessage
 final case class DownstreamRoomSvcMessage(roomId: String, roomMessage: RoomMessage) extends RoomSvcMessage
 final case class JoinRoomRequest(roomId: String, sessionId: String, session: Session) extends RoomSvcMessage

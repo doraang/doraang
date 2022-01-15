@@ -16,7 +16,7 @@ object HttpRoute {
       pathPrefix("room") {
         path(Segment) { (roomId: String) =>
           post {
-            appContext.externalService ! CreateRoomRequest(roomId)
+            appContext.managementGateway ! CreateRoomRequest(roomId)
             complete("OK")
           }
         }
