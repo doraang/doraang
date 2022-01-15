@@ -10,9 +10,9 @@ import me.chacham.dorrang.room.{InitRoomService, RoomService}
 
 object AppContext {
   def apply(context: ActorContext[_]): AppContext = {
-    val roomService = context.spawn(RoomService(), "roomService")
-    val messageBroker = context.spawn(MessageBroker(), "messageBroker")
-    val managementGateway = context.spawn(ManagementGateway(roomService), "managementGateway")
+    val roomService = context.spawn(RoomService(), RoomService.getClass.getSimpleName)
+    val messageBroker = context.spawn(MessageBroker(), MessageBroker.getClass.getSimpleName)
+    val managementGateway = context.spawn(ManagementGateway(roomService), ManagementGateway.getClass.getSimpleName)
 
     roomService ! InitRoomService(messageBroker)
     messageBroker ! InitMessageBroker(roomService)
